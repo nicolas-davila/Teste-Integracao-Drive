@@ -7,15 +7,27 @@ const { google } = require("googleapis");
 const uploadRouter = express.Router();
 const upload = multer();
 
-const KEYFILEPATH = path.join(__dirname, "upload-adote.json");
+const KEYFILEPATH = path.join(__dirname, "../../upload-adote.json");
 const SCOPES = ["https://www.googleapis.com/auth/drive"];
 
 const auth = new google.auth.GoogleAuth({
     keyFile: KEYFILEPATH,
     scopes: SCOPES,
 });
+  
+async function chorePorMim() {
+    const authClient = await (async () => {
+      const auth = new google.auth.GoogleAuth({
+        keyFile: KEYFILEPATH,
+        scopes: SCOPES,
+      });
+  
+      return await auth.getClient();
+    })();
+}
 
-
+chorePorMim();
+  
 uploadRouter.post("/upload", upload.any(), async (req, res) => {
     try {
         console.log(req.body);
